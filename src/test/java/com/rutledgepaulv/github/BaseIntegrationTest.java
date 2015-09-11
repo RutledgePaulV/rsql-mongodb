@@ -7,7 +7,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -30,7 +29,7 @@ public abstract class BaseIntegrationTest<T> {
 
     @Before
     public void setUp() {
-        converter = new TreeToCriteriaConverter(CLAZZ, new DefaultConversionService(), mongoMappingContext);
+        converter = new TreeToCriteriaConverter(CLAZZ, mongoMappingContext);
     }
 
     protected Query query(String rsql) {
