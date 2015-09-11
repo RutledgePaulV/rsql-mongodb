@@ -10,7 +10,6 @@
 
     <properties>
         <java.version>1.8</java.version>
-
     </properties>
 
     <dependencies>
@@ -33,7 +32,6 @@
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
-
 
     </dependencies>
 
