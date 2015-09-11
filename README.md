@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/RutledgePaulV/rsql-mongodb.svg)](https://travis-ci.org/RutledgePaulV/rsql-mongodb)
+
 ## What
 
 An open source implementation for converting (rsql)[https://github.com/jirutka/rsql-parser] to mongo queries for spring
