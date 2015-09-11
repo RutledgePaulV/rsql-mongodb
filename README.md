@@ -24,12 +24,20 @@ List<Person> personsNamedJoe = mongoOperations.find(query, Person.class);
 
 
 ### Caveats
+
+_Issue_ 
 ~~Does not yet support anything except string values. Coming soon!~~
+
+_Resolved_
+
 By providing the entity class to the CriteriaBuildingVisitor, all of the string fields
 that are associated with the nodes will be converted to their entity type prior to be
 setting on the criteria object. Spring will then appropriately map their values to whatever
 they need to be for the execution of the query.
 
+_Issue_
+
+Using the @Field annotations to choose a different value for the field in mongodb doesn't allow you to use that name as the field name in the RSQL query
 
 ### Examples of supported cases. For the full list, please see tests.
 
