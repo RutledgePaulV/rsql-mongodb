@@ -7,6 +7,20 @@ data. RSQL is a flexible and readable query language based off of apache's FIQL.
 makes RSQL a natural choice for APIs that want to provide flexible querying and whose underlying datastore is mongodb.
 
 
+## How to use it
+```java
+Node rootNode = new RSQLParser().parse("firstName==joe");
+Criteria criteria = rootNode.accept(new CriteriaBuildingVisitor());
+Query query = Query.query(criteria);
+List<Person> personsNamedJoe = mongoOperations.find(query, Person.class);
+```
+
+
+## Caveats
+Does not yet support anything except string values. Coming soon!
+
+
+## Currently Supported Cases [see tests](https://github.com/RutledgePaulV/rsql-mongodb/blob/master/src/test/java/RSQLToMongoQuery.java):
 ```
 # basic equality
 firstName==joe -> { "firstName" : "joe"}
