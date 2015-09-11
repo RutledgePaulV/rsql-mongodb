@@ -14,20 +14,20 @@ import cz.jirutka.rsql.parser.ast.OrNode;
 import cz.jirutka.rsql.parser.ast.RSQLVisitor;
 import org.springframework.data.mongodb.core.query.Criteria;
 
-public class MongoQueryRsqlVisitor implements RSQLVisitor<Criteria, Void> {
+public class CriteriaBuildingVisitor implements RSQLVisitor<Criteria, Void> {
 
-    private MongoQueryRsqlAdapter adapter = new MongoQueryRsqlAdapter();
+    private TreeToCriteriaConverter adapter = new TreeToCriteriaConverter();
 
     public Criteria visit(AndNode andNode, Void aVoid) {
-        return adapter.createSpecification(andNode);
+        return adapter.createCriteria(andNode);
     }
 
     public Criteria visit(OrNode orNode, Void aVoid) {
-        return adapter.createSpecification(orNode);
+        return adapter.createCriteria(orNode);
     }
 
     public Criteria visit(ComparisonNode comparisonNode, Void aVoid) {
-        return adapter.createSpecification(comparisonNode);
+        return adapter.createCriteria(comparisonNode);
     }
 
 }

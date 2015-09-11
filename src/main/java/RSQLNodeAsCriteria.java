@@ -12,11 +12,13 @@ import cz.jirutka.rsql.parser.ast.ComparisonOperator;
 import cz.jirutka.rsql.parser.ast.RSQLOperators;
 import org.springframework.data.mongodb.core.query.Criteria;
 
+import java.util.Arrays;
 import java.util.List;
 
-public class RsqlCriteria {
+@SuppressWarnings("ConstantConditions")
+public class RSQLNodeAsCriteria {
 
-    enum RsqlSearchOperation {
+    enum Operators {
         EQUAL(RSQLOperators.EQUAL),
         NOT_EQUAL(RSQLOperators.NOT_EQUAL),
         GREATER_THAN(RSQLOperators.GREATER_THAN),
@@ -27,18 +29,14 @@ public class RsqlCriteria {
         NOT_IN(RSQLOperators.NOT_IN);
 
         private ComparisonOperator operator;
-
-        RsqlSearchOperation(ComparisonOperator operator) {
+        Operators(ComparisonOperator operator) {
             this.operator = operator;
         }
 
-        public static RsqlSearchOperation getSimpleOperator(ComparisonOperator operator) {
-            for (RsqlSearchOperation operation : values()) {
-                if (operation.operator == operator) {
-                    return operation;
-                }
-            }
-            return null;
+        public static Operators toOperator(ComparisonOperator operator) {
+            return Arrays.stream(values())
+                    .filter(value -> value.operator.equals(operator))
+                    .findFirst().orElse(null);
         }
     }
 
@@ -47,7 +45,7 @@ public class RsqlCriteria {
     private ComparisonOperator operator;
     private List<String> arguments;
 
-    public RsqlCriteria(String property, ComparisonOperator operator, List<String> arguments) {
+    public RSQLNodeAsCriteria(String property, ComparisonOperator operator, List<String> arguments) {
         this.property = property;
         this.operator = operator;
         this.arguments = arguments;
@@ -55,27 +53,31 @@ public class RsqlCriteria {
 
 
     public Criteria toCriteria() {
+        if(arguments.isEmpty()) {
+            return null;
+        }
 
+        String first = arguments.get(0);
 
-        switch (RsqlSearchOperation.getSimpleOperator(operator)) {
+        switch (Operators.toOperator(operator)) {
             case EQUAL:
-                return Criteria.where(property).is(arguments);
+                return Criteria.where(property).is(first);
             case NOT_EQUAL:
-                return Criteria.where(property).ne(arguments);
+                return Criteria.where(property).ne(first);
             case GREATER_THAN:
-                return Criteria.where(property).gt(arguments);
+                return Criteria.where(property).gt(first);
             case GREATER_THAN_OR_EQUAL:
-                return Criteria.where(property).gte(arguments);
+                return Criteria.where(property).gte(first);
             case LESS_THAN:
-                return Criteria.where(property).lt(arguments);
+                return Criteria.where(property).lt(first);
             case LESS_THAN_OR_EQUAL:
-                return Criteria.where(property).lte(arguments);
+                return Criteria.where(property).lte(first);
             case IN:
                 return Criteria.where(property).in(arguments);
             case NOT_IN:
                 return Criteria.where(property).nin(arguments);
             default:
-                return new Criteria();
+                return null;
         }
 
     }
