@@ -1,3 +1,5 @@
+package com.rutledgepaulv.github;
+
 import cz.jirutka.rsql.parser.ast.AndNode;
 import cz.jirutka.rsql.parser.ast.ComparisonNode;
 import cz.jirutka.rsql.parser.ast.OrNode;
@@ -6,18 +8,22 @@ import org.springframework.data.mongodb.core.query.Criteria;
 
 public class CriteriaBuildingVisitor implements RSQLVisitor<Criteria, Void> {
 
-    private TreeToCriteriaConverter adapter = new TreeToCriteriaConverter();
+    TreeToCriteriaConverter converter;
+
+    public CriteriaBuildingVisitor(TreeToCriteriaConverter converter) {
+        this.converter = converter;
+    }
 
     public Criteria visit(AndNode andNode, Void aVoid) {
-        return adapter.createCriteria(andNode);
+        return converter.createCriteria(andNode);
     }
 
     public Criteria visit(OrNode orNode, Void aVoid) {
-        return adapter.createCriteria(orNode);
+        return converter.createCriteria(orNode);
     }
 
     public Criteria visit(ComparisonNode comparisonNode, Void aVoid) {
-        return adapter.createCriteria(comparisonNode);
+        return converter.createCriteria(comparisonNode);
     }
 
 }

@@ -1,12 +1,29 @@
+package com.rutledgepaulv.github;
+
 import cz.jirutka.rsql.parser.ast.ComparisonNode;
 import cz.jirutka.rsql.parser.ast.LogicalNode;
 import cz.jirutka.rsql.parser.ast.Node;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.support.DefaultConversionService;
+import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 import org.springframework.data.mongodb.core.query.Criteria;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class TreeToCriteriaConverter {
+
+    private Class<?> entity;
+    private ComparisonNodeToFieldCriteriaMapper mapper;
+
+    public TreeToCriteriaConverter(Class<?> entity, MongoMappingContext mappingContext) {
+        this(entity, new DefaultConversionService(), mappingContext);
+    }
+
+    public TreeToCriteriaConverter(Class<?> entity, ConversionService conversionService, MongoMappingContext mappingContext) {
+        this.entity = entity;
+        mapper = new ComparisonNodeToFieldCriteriaMapper(conversionService, mappingContext);
+    }
 
     public Criteria createCriteria(Node node) {
         if (node instanceof LogicalNode) {
@@ -17,7 +34,6 @@ public class TreeToCriteriaConverter {
         }
         return null;
     }
-
 
     private Criteria createCriteria(LogicalNode logicalNode) {
 
@@ -38,8 +54,7 @@ public class TreeToCriteriaConverter {
     }
 
     private Criteria createCriteria(ComparisonNode comparisonNode) {
-        return new RSQLNodeAsCriteria(comparisonNode.getSelector(), comparisonNode.getOperator(),
-                comparisonNode.getArguments()).toCriteria();
+        return mapper.convertComparisonNode(comparisonNode, entity).toCriteria();
     }
 
 }
