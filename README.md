@@ -123,5 +123,6 @@ firstName!=joe,lastName==donovan -> { "$or" : [ { "firstName" : { "$ne" : "joe"}
 ```
 
 
-## License
-MIT
+### License
+
+This project is licensed under [MIT license](http://opensource.org/licenses/MIT).
