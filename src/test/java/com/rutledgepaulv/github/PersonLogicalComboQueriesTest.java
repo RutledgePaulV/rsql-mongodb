@@ -12,7 +12,7 @@ package com.rutledgepaulv.github;
 import com.rutledgepaulv.github.models.Person;
 import org.junit.Test;
 
-public class PersonLogicalComboQueries extends BaseIntegrationTest<Person>{
+public class PersonLogicalComboQueriesTest extends BaseIntegrationTest<Person>{
 
     @Test
     public void testEqualityOfTwoAndedThings() {

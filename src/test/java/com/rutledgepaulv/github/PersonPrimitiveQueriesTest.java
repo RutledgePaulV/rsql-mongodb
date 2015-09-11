@@ -5,7 +5,7 @@ import com.rutledgepaulv.github.models.*;
 
 
 
-public class PersonPrimitiveQueries extends BaseIntegrationTest<Person> {
+public class PersonPrimitiveQueriesTest extends BaseIntegrationTest<Person> {
 
     // basic operators
     @Test
