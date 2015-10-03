@@ -10,25 +10,27 @@ makes RSQL a natural choice for APIs that want to provide flexible querying and 
 ### How to use it
 ```java
 
-// need the mapping context in order to use spring's resolution of fields based on the incoming names
+@Autowired
+private MongoOperations mongoOperations;
+
 @Autowired
 private MongoMappingContext mappingContext;
 
+// build the converter. You can define a list of conversions instead, but using a spring conversion service and mongo mapping context
+// works really quite well. Some applications will have a conversion service available from the application context that can include
+// custom converters (iso -> date, etc)
+ComparisonToCriteriaConverter converter = new ComparisonToCriteriaConverter(new DefaultConversionService(), mongoMappingContext);
 
-Node rootNode = new RSQLParser().parse("firstName==joe");
-TreeToCriteriaConverter converter = new TreeToCriteriaConverter(Person.class, mappingContext);
-Criteria criteria = rootNode.accept(new CriteriaBuildingVisitor(converter));
-Query query = Query.query(criteria);
+// build the actual rsql string -> mongo criteria adapter
+RsqlMongoAdapter adapter = new RsqlMongoAdapter(converter);
+
+// convert the rsql to some criteria and add that criteria to the mongo query object
+Query query = Query.query(adapter.getCriteria("firstName==joe", Person.class));
+
+// make your query!
 List<Person> personsNamedJoe = mongoOperations.find(query, Person.class);
+
 ```
-
-
-### Caveats
-~~Does not yet support anything except string values. Coming soon!~~
-By providing the entity class to the CriteriaBuildingVisitor, all of the string fields
-that are associated with the nodes will be converted to their entity type prior to be
-setting on the criteria object. Spring will then appropriately map their values to whatever
-they need to be for the execution of the query.
 
 
 ### Examples of supported cases. For the full list, please see tests.

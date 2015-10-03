@@ -1,29 +1,52 @@
 package com.rutledgepaulv.github;
 
-import cz.jirutka.rsql.parser.ast.AndNode;
-import cz.jirutka.rsql.parser.ast.ComparisonNode;
-import cz.jirutka.rsql.parser.ast.OrNode;
-import cz.jirutka.rsql.parser.ast.RSQLVisitor;
+import cz.jirutka.rsql.parser.ast.*;
 import org.springframework.data.mongodb.core.query.Criteria;
 
-public class CriteriaBuildingVisitor implements RSQLVisitor<Criteria, Void> {
+import java.util.List;
+import java.util.stream.Collectors;
 
-    TreeToCriteriaConverter converter;
+public class CriteriaBuildingVisitor extends NoArgRSQLVisitorAdapter<Criteria> {
 
-    public CriteriaBuildingVisitor(TreeToCriteriaConverter converter) {
+    private ComparisonToCriteriaConverter converter;
+    private Class<?> targetEntityType;
+
+    public CriteriaBuildingVisitor(ComparisonToCriteriaConverter converter, Class<?> targetEntity) {
         this.converter = converter;
+        this.targetEntityType = targetEntity;
     }
 
-    public Criteria visit(AndNode andNode, Void aVoid) {
-        return converter.createCriteria(andNode);
+    @Override
+    public Criteria visit(AndNode node) {
+        Criteria parent = new Criteria();
+        List<Criteria> children = getChildCriteria(node);
+        return parent.andOperator(children.toArray(new Criteria[children.size()]));
     }
 
-    public Criteria visit(OrNode orNode, Void aVoid) {
-        return converter.createCriteria(orNode);
+    @Override
+    public Criteria visit(OrNode node) {
+        Criteria parent = new Criteria();
+        List<Criteria> children = getChildCriteria(node);
+        return parent.orOperator(children.toArray(new Criteria[children.size()]));
     }
 
-    public Criteria visit(ComparisonNode comparisonNode, Void aVoid) {
-        return converter.createCriteria(comparisonNode);
+    @Override
+    public Criteria visit(ComparisonNode node) {
+        return converter.asCriteria(node, targetEntityType);
+    }
+
+    private List<Criteria> getChildCriteria(LogicalNode node) {
+        return node.getChildren().stream().map(this::visit).collect(Collectors.toList());
+    }
+
+    private Criteria visit(Node node) {
+        if (node instanceof AndNode) {
+            return visit((AndNode) node);
+        } else if (node instanceof OrNode) {
+            return visit((OrNode) node);
+        } else{
+            return visit((ComparisonNode) node);
+        }
     }
 
 }
