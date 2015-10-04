@@ -64,10 +64,10 @@ firstName=out=(billy,bob,joel) -> { "firstName" : { "$nin" : [ "billy" , "bob" ,
 firstName!=joe;lastName==dummy -> { "$and" : [ { "firstName" : { "$ne" : "joe"}} , { "lastName" : "dummy"}]}
 
 # oring of two basic conditions
-firstName!=joe,lastName==donovan -> { "$or" : [ { "firstName" : { "$ne" : "joe"}} , { "lastName" : "donovan"}]}
+firstName!=john,lastName==doe -> { "$or" : [ { "firstName" : { "$ne" : "john"}} , { "lastName" : "doe"}]}
 
 # anding of two oring conditions of anding conditions
-((firstName==joe;lastName==donovan),(firstName==aaron;lastName==carter));((age==21;height==90),(age==30;height==100)) -> 
+((firstName==john;lastName==doe),(firstName==aaron;lastName==carter));((age==21;height==90),(age==30;height==100)) -> 
 
     {
        "$and":[
@@ -76,10 +76,10 @@ firstName!=joe,lastName==donovan -> { "$or" : [ { "firstName" : { "$ne" : "joe"}
                 {
                    "$and":[
                       {
-                         "firstName":"joe"
+                         "firstName":"john"
                       },
                       {
-                         "lastName":"donovan"
+                         "lastName":"doe"
                       }
                    ]
                 },
