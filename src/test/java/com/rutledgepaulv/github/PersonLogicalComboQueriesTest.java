@@ -12,14 +12,14 @@ public class PersonLogicalComboQueriesTest extends BaseIntegrationTest<Person>{
 
     @Test
     public void testThingsThatAreOredTogether() {
-        check("firstName!=joe,lastName==donovan","{ \"$or\" : [ { \"firstName\" : { \"$ne\" : \"joe\"}} , { \"lastName\" : \"donovan\"}]}");
+        check("firstName!=john,lastName==doe","{ \"$or\" : [ { \"firstName\" : { \"$ne\" : \"john\"}} , { \"lastName\" : \"doe\"}]}");
     }
 
     @Test
     public void testAndingOfOringsOfAndings() {
-        check("((firstName==joe;lastName==donovan),(firstName==aaron;lastName==carter));((age==21;height==90),(age==30;height==100))",
-                "{ \"$and\" : [ { \"$or\" : [ { \"$and\" : [ { \"firstName\" : \"joe\"} , " +
-                        "{ \"lastName\" : \"donovan\"}]} , { \"$and\" : [ { \"firstName\" : \"aaron\"} , " +
+        check("((firstName==john;lastName==doe),(firstName==aaron;lastName==carter));((age==21;height==90),(age==30;height==100))",
+                "{ \"$and\" : [ { \"$or\" : [ { \"$and\" : [ { \"firstName\" : \"john\"} , " +
+                        "{ \"lastName\" : \"doe\"}]} , { \"$and\" : [ { \"firstName\" : \"aaron\"} , " +
                         "{ \"lastName\" : \"carter\"}]}]} , { \"$or\" : [ { \"$and\" : [ { \"age\" : 21} , " +
                         "{ \"height\" : 90}]} , { \"$and\" : [ { \"age\" : 30} , { \"height\" : 100}]}]}]}");
     }
