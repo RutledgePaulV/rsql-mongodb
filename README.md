@@ -1,3 +1,7 @@
+## Defunct
+This library has been superseded by the more general (and just better) [rest-query-engine](https://github.com/rutledgepaulv/rest-query-engine).
+
+
 [![Build Status](https://travis-ci.org/RutledgePaulV/rsql-mongodb.svg)](https://travis-ci.org/RutledgePaulV/rsql-mongodb)
 
 ### What
